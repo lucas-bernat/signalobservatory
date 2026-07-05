@@ -1,0 +1,53 @@
+# macOS
+.DS_Store
+
+# Editor and local tool state
+.vscode/
+.idea/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Node and frontend build outputs
+node_modules/
+.next/
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+logs/
+
+# Local databases and runtime state
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Large SDR captures and generated measurement data
+data/raw/
+data/captures/
+data/generated/
+*.iq
+*.cfile
+*.cu8
+*.cs8
+*.cf32
+
+# Generated media and plots from experiments
+experiments/output/
+experiments/plots/
