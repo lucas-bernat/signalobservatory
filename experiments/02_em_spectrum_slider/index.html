@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Signal Observatory | EM Spectrum Slider</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero-band" aria-labelledby="title">
+        <div class="title-block">
+          <p class="eyebrow">Signal Observatory Experiment 02</p>
+          <h1 id="title">Electromagnetic Spectrum Slider</h1>
+        </div>
+        <div class="readout" aria-live="polite">
+          <div>
+            <span class="readout-label">Frequency</span>
+            <strong id="frequencyReadout">100 MHz</strong>
+          </div>
+          <div>
+            <span class="readout-label">Wavelength</span>
+            <strong id="wavelengthReadout">3.00 m</strong>
+          </div>
+          <div>
+            <span class="readout-label">Region</span>
+            <strong id="regionReadout">Radio waves</strong>
+          </div>
+        </div>
+      </section>
+
+      <nav class="tab-list" role="tablist" aria-label="Experiment views">
+        <button
+          id="explorerTabButton"
+          class="tab-button is-active"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="explorerTab"
+          data-tab-target="explorerTab"
+        >
+          Spectrum Slider
+        </button>
+        <button
+          id="sensorMapTabButton"
+          class="tab-button"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="sensorMapTab"
+          data-tab-target="sensorMapTab"
+        >
+          Sensor Map
+        </button>
+      </nav>
+
+      <section
+        id="explorerTab"
+        class="tab-panel is-active"
+        role="tabpanel"
+        aria-labelledby="explorerTabButton"
+      >
+        <section class="spectrum-panel" aria-labelledby="spectrumTitle">
+          <div class="section-heading">
+            <h2 id="spectrumTitle">Spectrum Position</h2>
+            <p id="exampleReadout">FM broadcast, aircraft radio, NOAA weather radio, ADS-B</p>
+          </div>
+
+          <div class="spectrum-track" aria-hidden="true">
+            <div class="band radio"><span>Radio</span></div>
+            <div class="band microwave"><span>Micro</span></div>
+            <div class="band infrared"><span>IR</span></div>
+            <div class="band visible"><span>VIS</span></div>
+            <div class="band ultraviolet"><span>UV</span></div>
+            <div class="band xray"><span>X-ray</span></div>
+            <div class="band gamma"><span>Gamma</span></div>
+            <div id="sdrRange" class="sdr-range"></div>
+            <div id="spectrumMarker" class="spectrum-marker"></div>
+          </div>
+
+          <div class="tick-row" aria-hidden="true">
+            <span>10^3 Hz</span>
+            <span>10^6</span>
+            <span>10^9</span>
+            <span>10^12</span>
+            <span>10^15</span>
+            <span>10^18</span>
+            <span>10^21 Hz</span>
+          </div>
+
+          <label class="slider-label" for="frequencySlider">
+            <span>log10 frequency</span>
+            <output id="logReadout" for="frequencySlider">8.00</output>
+          </label>
+          <input id="frequencySlider" class="frequency-slider" type="range" min="3" max="22" step="0.001" value="8" />
+        </section>
+
+        <section class="visual-grid">
+          <article class="wave-panel">
+            <div class="section-heading">
+              <h2>Scaled Waveform</h2>
+              <p>Higher frequency means more cycles inside the same reference window.</p>
+            </div>
+            <canvas id="waveCanvas" width="980" height="360" aria-label="Scaled waveform visualization"></canvas>
+          </article>
+
+          <article class="info-panel">
+            <h2>Instrument Context</h2>
+            <dl>
+              <div>
+                <dt>RTL-SDR direct range</dt>
+                <dd id="sdrReadout">Inside range</dd>
+              </div>
+              <div>
+                <dt>Approximate period</dt>
+                <dd id="periodReadout">10.0 ns</dd>
+              </div>
+              <div>
+                <dt>Sensor family</dt>
+                <dd id="sensorReadout">Antenna + SDR receiver</dd>
+              </div>
+            </dl>
+          </article>
+        </section>
+      </section>
+
+      <section
+        id="sensorMapTab"
+        class="tab-panel"
+        role="tabpanel"
+        aria-labelledby="sensorMapTabButton"
+        hidden
+      >
+        <section class="map-intro" aria-labelledby="sensorMapTitle">
+          <div class="section-heading">
+            <h2 id="sensorMapTitle">Electromagnetic Collectors</h2>
+            <p>The same spectrum needs very different front ends.</p>
+          </div>
+          <div class="concept-strip">
+            <article>
+              <span class="concept-kicker">Long wavelength</span>
+              <strong>Wire antennas</strong>
+              <p>Conductors guide tiny RF currents into a receiver.</p>
+            </article>
+            <article>
+              <span class="concept-kicker">Short wavelength</span>
+              <strong>Lenses and filters</strong>
+              <p>Optics focus photons onto camera or photodiode sensors.</p>
+            </article>
+            <article>
+              <span class="concept-kicker">High energy</span>
+              <strong>Detector materials</strong>
+              <p>Photons are counted by ionization or scintillation events.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="sensor-map-panel" aria-labelledby="collectorTitle">
+          <div class="section-heading">
+            <h2 id="collectorTitle">Spectrum Map</h2>
+            <p>Frequency rises left to right. Wavelength shrinks left to right.</p>
+          </div>
+          <div class="collector-legend" aria-hidden="true">
+            <span>Wire / metal structure</span>
+            <span>Lens / aperture</span>
+            <span>Detector crystal / gas tube</span>
+          </div>
+          <div id="sensorSpectrumMap" class="sensor-spectrum-map"></div>
+        </section>
+
+        <section class="sensor-grid-panel" aria-labelledby="sensorCardsTitle">
+          <div class="section-heading">
+            <h2 id="sensorCardsTitle">What We Can Buy Or Build</h2>
+            <p>Good learning sensors first; hazardous sources never.</p>
+          </div>
+          <div id="sensorCards" class="sensor-card-grid"></div>
+        </section>
+
+        <section class="buy-panel" aria-labelledby="buyTitle">
+          <div class="section-heading">
+            <h2 id="buyTitle">Practical Buying Path</h2>
+            <p>Useful after the Raspberry Pi is alive.</p>
+          </div>
+          <div class="buy-grid">
+            <article>
+              <strong>Best next non-SDR sensor</strong>
+              <p>Raspberry Pi Camera Module 3 NoIR or HQ Camera for visible and near-infrared experiments.</p>
+            </article>
+            <article>
+              <strong>Best thermal experiment</strong>
+              <p>MLX90640 thermal camera breakout for low-resolution heat maps and calibration practice.</p>
+            </article>
+            <article>
+              <strong>Best UV experiment</strong>
+              <p>LTR390 UVA sensor for sunlight, shade, glass transmission, and weather-context measurements.</p>
+            </article>
+            <article>
+              <strong>High-energy caution</strong>
+              <p>Use passive radiation counters only. Do not buy or create X-ray or gamma-ray sources.</p>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

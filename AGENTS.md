@@ -1,12 +1,15 @@
 # Signal Observatory Working Agreement
 
-This repository is a personal learning laboratory for software, DSP, RF, and hardware instrumentation. The goal is not to move fast at the expense of understanding. The goal is to build a scientific instrument while rebuilding the concepts behind it.
+This repository is a personal learning laboratory for software, DSP, RF, sensors, imaging, and hardware instrumentation. The goal is not to move fast at the expense of understanding. The goal is to build a scientific instrument while rebuilding the concepts behind it.
+
+The project remains named Signal Observatory, but the long-term direction is The Invisible Observatory: a modular multi-sensor platform for observing phenomena humans cannot directly perceive. Radio is the first module and learning path, not the whole product boundary.
 
 ## User Context
 
 - The user is an Audiovisual Systems Engineer refreshing DSP, RF, software architecture, and embedded/hardware concepts.
 - Treat familiar AV concepts such as signal flow, gain staging, filtering, noise, calibration, and measurement discipline as useful bridges into SDR and scientific instrumentation.
 - This is not a monetized product. Optimize for learning, clarity, and maintainability.
+- The user is interested in both software and physical instrumentation. Treat hardware, calibration, and measurement integrity as first-class topics.
 
 ## Mentorship Rules
 
@@ -14,6 +17,8 @@ This repository is a personal learning laboratory for software, DSP, RF, and har
 - Discuss architectural tradeoffs before major implementation decisions.
 - Prefer short experiments before production features.
 - Keep explanations concrete: connect math, code, and hardware behavior.
+- Use visual explanations by default for signal-flow, DSP, RF, hardware, and architecture concepts. Prefer diagrams, charts, tables, ASCII sketches, and Mermaid diagrams when they make the concept easier to see.
+- For theory-heavy topics, use this explanation ladder: intuition first, vocabulary second, visual model third, equation fourth, practical consequence fifth, experiment last.
 - When a feature has learning value, invite the user to reason through or write the central part.
 - Handle boilerplate, scaffolding, formatting, and repetitive plumbing directly.
 - Review user-written code like a senior engineer: name the issue, explain why it matters, and suggest a clear improvement.
@@ -36,6 +41,10 @@ Use this loop for each meaningful feature:
 - Use REST for configuration, status, and historical queries.
 - Use streaming transport, likely WebSockets, for live spectrum or waterfall frames.
 - Keep hardware acquisition behind source interfaces so synthetic data, recorded IQ files, and live SDR hardware can all drive the same processing code.
+- Design future backend/storage concepts around generic observatory entities: Observatory, Device, Sensor, CaptureSession, Measurement, DerivedMetric, Observation, and Experiment.
+- Keep radio-specific behavior inside a radio module. Do not let radio-only names define the entire platform model.
+- Treat the Unified Timeline as the long-term product spine for comparing measurements across sensors and time.
+- Include calibration status and evidence links in future measurement and observation designs.
 - Put concept-first scripts and notebooks in `experiments/`.
 - Promote stable, understood logic from `experiments/` into application modules only after it has been explained and verified.
 
@@ -51,6 +60,7 @@ Use this loop for each meaningful feature:
 
 - Keep docs as lab notes, not marketing.
 - Record commands, observations, screenshots or plots when useful, and conclusions.
+- Include a visual mental model for important concepts whenever possible.
 - If a concept was confusing, document the confusion and the final mental model.
 - Use clear ASCII text unless a file already uses another character set.
 

@@ -53,6 +53,25 @@ What am I trying to learn or prove?
 
 What is my current understanding of why this happened?
 
+When explaining a new concept, use this pattern:
+
+1. Intuition: what is the everyday or AV-systems mental model?
+2. Vocabulary: what are the exact technical terms?
+3. Visual: what diagram, table, plot, or sketch makes it visible?
+4. Math: what equation matters, if any?
+5. Consequence: what changes in the measurement or code?
+6. Experiment: how can I test it myself?
+
+## Diagram Or Mental Model
+
+Add a sketch, Mermaid diagram, table, plot, or ASCII chart that makes the concept visible.
+
+```mermaid
+flowchart LR
+    A["Physical signal"] --> B["Measurement"]
+    B --> C["Explanation"]
+```
+
 ## Mistakes Or Confusions
 
 - What did I misunderstand?
@@ -71,6 +90,7 @@ What should I test next?
 
 - Include exact commands when they matter.
 - Note settings such as sample rate, center frequency, gain, FFT size, and window type.
+- Add a diagram, chart, table, or mental-model sketch for every major concept.
 - Keep failed attempts. They are often the most useful part.
 - Write explanations in your own words after discussion.
 - Prefer evidence over vibes.

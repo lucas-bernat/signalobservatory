@@ -1,9 +1,9 @@
 # Signal Observatory
-## Product Requirements Document (PRD) v1.0
+## Product Requirements Document (PRD) v1.1
 
 **Author:** Lucas Bernat  
 **Status:** Draft  
-**Version:** 1.0
+**Version:** 1.1
 
 ---
 
@@ -11,11 +11,15 @@
 
 Signal Observatory is a long-term personal scientific laboratory and engineering platform.
 
+The current long-term direction is to evolve Signal Observatory into **The Invisible Observatory**: a modular platform for observing physical phenomena humans cannot directly perceive.
+
 Its purpose is **not** to build another SDR application, weather station, or dashboard.
 
 Its purpose is to build a modular scientific observatory that allows me to observe, measure and understand physical phenomena that are normally invisible.
 
-The project should help me explore:
+The first concrete module is radio-frequency observation with Raspberry Pi and RTL-SDR hardware.
+
+The broader platform should eventually help me explore:
 
 - Radio waves
 - Electromagnetic signals
@@ -23,11 +27,39 @@ The project should help me explore:
 - Weather
 - Aircraft transmissions
 - Astronomical phenomena
+- Visible, infrared, near-infrared, thermal, solar and ultraviolet phenomena
+- Cross-sensor correlations across time
 - Information itself
 
 The project is strongly inspired by Claude Shannon and Information Theory.
 
 Every module should answer scientific questions rather than simply displaying data.
+
+## Product Direction
+
+The repository remains named Signal Observatory because radio is the first learning path and first hardware module.
+
+The product concept should be designed as:
+
+```text
+Signal Observatory = first module and learning path
+The Invisible Observatory = broader multi-sensor platform direction
+```
+
+Radio should not become the entire architecture. It should become one module inside a generic observatory system.
+
+The system should eventually organize measurements around:
+
+- Observatory
+- Device
+- Sensor
+- Capture session
+- Measurement
+- Derived metric
+- Observation
+- Experiment
+
+The long-term scientific interface should act like a time machine: choose a moment, then inspect what all sensors observed near that time.
 
 ---
 
@@ -62,6 +94,10 @@ Every subsystem should be independent.
 
 Future modules should plug into the existing architecture without requiring major rewrites.
 
+Radio-specific behavior should live inside a radio module rather than defining the platform's core data model.
+
+The shared platform should own observatories, devices, sensors, measurements, sessions, storage, calibration, timestamps, geolocation, timeline queries, and observations.
+
 ## Simplicity
 
 Avoid unnecessary complexity.
@@ -74,11 +110,11 @@ Build incrementally.
 
 ---
 
-# Cloud-Ready Architecture
+# Cloud-Ready Multi-Sensor Architecture
 
-Signal Observatory should ultimately become a web-based scientific platform.
+Signal Observatory should ultimately become a web-based scientific platform for The Invisible Observatory.
 
-The Raspberry Pi will act as an **edge device**, responsible for collecting measurements from connected hardware such as SDRs, sensors, cameras and future scientific instruments.
+The Raspberry Pi will act as an **edge device**, responsible for collecting measurements from connected hardware such as SDRs, cameras, environmental sensors and future scientific instruments.
 
 The primary user interface should be a web application accessible from any device.
 
@@ -92,7 +128,7 @@ Initially all services may run on the Raspberry Pi.
 
 As the project grows, components should be easy to migrate to cloud infrastructure.
 
-The long-term vision is to support multiple observatories distributed around the world, all connected to a common backend.
+The long-term vision is to support multiple observatories distributed around the world, all connected to a common backend and unified timeline.
 
 ---
 
@@ -113,7 +149,7 @@ Database
     │
 Edge Device (Raspberry Pi)
     │
-RTL-SDR • Sensors • Cameras • GPS
+Modules: Radio | Cameras | Weather | Solar/UV | Astronomy | Future Sensors
 ```
 
 ---
@@ -134,6 +170,11 @@ RTL-SDR • Sensors • Cameras • GPS
 - Weather station
 - GPS
 - All-sky camera
+- Visible camera
+- Raspberry Pi NoIR or NIR-capable camera
+- Thermal camera
+- UV sensor
+- Solar irradiance sensor
 - Lightning detector
 - Air quality sensors
 - Radio astronomy antenna
@@ -143,7 +184,38 @@ RTL-SDR • Sensors • Cameras • GPS
 
 # Development Roadmap
 
-## Phase 1 — Spectrum Analyzer
+## Phase 0 — Observatory Bring-Up
+
+Verify the Raspberry Pi and hardware signal chain before building application code.
+
+Learn:
+
+- SSH
+- Raspberry Pi setup
+- USB device detection
+- Known-good hardware validation
+- Why unknown hardware and unknown software should not be debugged at the same time
+
+---
+
+## Phase 0.5 — Platform Foundation
+
+Before backend implementation hardens, document and later introduce the generic observatory model:
+
+- Observatory
+- Device
+- Sensor
+- CaptureSession
+- Measurement
+- DerivedMetric
+- Observation
+- Experiment
+
+The goal is to make sure Phase 1 radio work fits into a multi-sensor platform instead of becoming a standalone SDR-only app.
+
+---
+
+## Phase 1 — Radio Module: Spectrum Analyzer
 
 Build a real-time spectrum analyzer.
 
@@ -156,6 +228,7 @@ Features:
 - Waterfall
 - Peak detection
 - SQLite logging
+- Measurements modeled as radio sensor data inside the generic platform
 
 Learn:
 
@@ -168,7 +241,27 @@ Learn:
 
 ---
 
-## Phase 2 — Signal Intelligence
+## Phase 2 — Unified Timeline MVP
+
+Create the first cross-sensor product concept, even if early data is seeded or simulated.
+
+Features:
+
+- Query measurements around a target timestamp
+- Display nearby radio measurements and future sensor placeholders
+- Show derived metrics and observations connected to evidence
+- Establish the pattern for comparing multiple sensors over time
+
+Learn:
+
+- Time-series data modeling
+- Timestamp tolerance windows
+- Sensor synchronization
+- Evidence-linked observations
+
+---
+
+## Phase 3 — Radio Signal Intelligence
 
 - Automatic signal detection
 - Signal classification
@@ -178,7 +271,7 @@ Learn:
 
 ---
 
-## Phase 3 — ADS-B
+## Phase 4 — ADS-B
 
 Receive aircraft transmissions directly.
 
@@ -186,13 +279,13 @@ Learn packet decoding and radio protocols.
 
 ---
 
-## Phase 4 — Weather Satellites
+## Phase 5 — Weather Satellites
 
 Receive and decode NOAA weather satellite imagery.
 
 ---
 
-## Phase 5 — Meteorology
+## Phase 6 — Meteorology
 
 Integrate sensors for:
 
@@ -205,7 +298,36 @@ Integrate sensors for:
 
 ---
 
-## Phase 6 — Astronomy
+## Phase 7 — Near-Infrared Plant Observatory
+
+Add the first non-radio module once the generic platform foundation is ready.
+
+Possible hardware:
+
+- RGB camera
+- Raspberry Pi NoIR or NIR-capable camera
+- Temperature/humidity sensor
+- Controlled lighting
+- White reference target
+
+Initial experiment:
+
+- Capture visible and NIR images of the same plant over time
+- Record environmental context and watering events
+- Display images and environmental readings on the Unified Timeline
+- Avoid plant-health claims until calibration and validation exist
+
+Learn:
+
+- Imaging sensors
+- Reflectance
+- Calibration
+- Controlled experiments
+- Cross-sensor comparison
+
+---
+
+## Phase 8 — Astronomy
 
 Track:
 
@@ -219,13 +341,13 @@ Later add amateur radio astronomy.
 
 ---
 
-## Phase 7 — Antenna Laboratory
+## Phase 9 — Antenna Laboratory
 
 Experiment with antenna gain, polarization, orientation and noise.
 
 ---
 
-## Phase 8 — Information Theory
+## Phase 10 — Information Theory
 
 Inspired by Claude Shannon.
 
@@ -238,7 +360,7 @@ Implement visualizations for:
 
 ---
 
-## Phase 9 — AI Scientist
+## Phase 11 — AI Scientist
 
 Use AI to:
 
@@ -246,6 +368,8 @@ Use AI to:
 - Discover patterns
 - Summarize observations
 - Suggest experiments
+- Clearly distinguish evidence from speculation
+- Link every observation to supporting measurements
 
 ---
 
@@ -265,6 +389,9 @@ frontend/
 experiments/
 
 docs/
+    vision/
+    architecture/
+    roadmap/
 
 data/
 
@@ -285,6 +412,9 @@ The project is **not** intended to:
 - Optimize for maximum performance before understanding the concepts.
 - Support every SDR device from day one.
 - Introduce machine learning before building a solid DSP foundation.
+- Build every sensor module before the first module is understood.
+- Claim scientific accuracy for uncalibrated optical, thermal, NIR, UV or radio measurements.
+- Let AI observations appear without evidence, confidence and uncertainty language.
 
 ---
 
