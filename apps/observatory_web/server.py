@@ -51,6 +51,7 @@ class ObservatoryRequestHandler(BaseHTTPRequestHandler):
                     "python_version": platform.python_version(),
                     "server_time": time.time(),
                     "source": self.source.name,
+                    "source_metadata": self.source.metadata(),
                     "working_directory": os.getcwd(),
                 }
             )

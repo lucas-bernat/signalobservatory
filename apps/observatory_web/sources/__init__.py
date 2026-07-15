@@ -1,7 +1,7 @@
 """Spectrum source implementations for the observatory web app."""
 
-from .base import SpectrumFrame, SpectrumSource
+from .base import SourceMetadata, SpectrumFrame, SpectrumSource
 from .synthetic import SyntheticSpectrumSource
 
 
-__all__ = ["SpectrumFrame", "SpectrumSource", "SyntheticSpectrumSource"]
+__all__ = ["SourceMetadata", "SpectrumFrame", "SpectrumSource", "SyntheticSpectrumSource"]

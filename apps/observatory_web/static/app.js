@@ -2,12 +2,16 @@ const statusElements = {
   connection: document.querySelector("#connectionState"),
   host: document.querySelector("#hostReadout"),
   source: document.querySelector("#sourceReadout"),
+  sourceMode: document.querySelector("#sourceModeReadout"),
+  sourceAcquisition: document.querySelector("#sourceAcquisitionReadout"),
+  sourceHardware: document.querySelector("#sourceHardwareReadout"),
   sampleRate: document.querySelector("#sampleRateReadout"),
   fftSize: document.querySelector("#fftSizeReadout"),
   binSpacing: document.querySelector("#binSpacingReadout"),
   lastFrame: document.querySelector("#lastFrameReadout"),
   peaks: document.querySelector("#peakReadouts"),
   refreshButton: document.querySelector("#refreshButton"),
+  pathDiagram: document.querySelector("#pathDiagram"),
 };
 
 const spectrumCanvas = document.querySelector("#spectrumCanvas");
@@ -66,8 +70,13 @@ function setConnectionState(isConnected) {
 }
 
 function renderStatus(status, spectrum) {
+  const sourceMetadata = status.source_metadata || {};
+
   statusElements.host.textContent = status.hostname;
-  statusElements.source.textContent = spectrum.source;
+  statusElements.source.textContent = sourceMetadata.display_name || spectrum.source;
+  statusElements.sourceMode.textContent = sourceMetadata.mode || "-";
+  statusElements.sourceAcquisition.textContent = sourceMetadata.acquisition || "-";
+  statusElements.sourceHardware.textContent = sourceMetadata.hardware || "-";
   statusElements.sampleRate.textContent = `${formatHz(spectrum.sample_rate_hz)}`;
   statusElements.fftSize.textContent = numberFormat.format(spectrum.fft_size);
   statusElements.binSpacing.textContent = `${frequencyFormat.format(spectrum.bin_spacing_hz)} Hz`;
@@ -81,6 +90,20 @@ function renderStatus(status, spectrum) {
     return chip;
   });
   statusElements.peaks.replaceChildren(...chips);
+  renderSignalPath(sourceMetadata.signal_path);
+}
+
+function renderSignalPath(signalPath = []) {
+  const steps = signalPath.length
+    ? signalPath
+    : ["Source", "Samples", "FFT", "Browser Plot"];
+  const nodes = steps.map((step) => {
+    const node = document.createElement("span");
+    node.textContent = step;
+    return node;
+  });
+
+  statusElements.pathDiagram.replaceChildren(...nodes);
 }
 
 function drawFrame(context, canvas, title) {

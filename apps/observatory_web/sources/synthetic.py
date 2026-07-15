@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from random import Random
 from typing import Any
 
-from .base import SpectrumFrame
+from .base import SourceMetadata, SpectrumFrame
 from .dsp import fft
 
 
@@ -38,6 +38,23 @@ class SyntheticSpectrumSource:
         Tone(1_000, 0.72, "#2563eb", "1 kHz reference tone"),
         Tone(10_000, 0.36, "#dc2626", "10 kHz weaker tone"),
     )
+
+    def metadata(self) -> SourceMetadata:
+        return {
+            "name": self.name,
+            "display_name": "Synthetic dual-tone source",
+            "mode": "Simulated",
+            "acquisition": "Software-generated samples",
+            "hardware": "No hardware required",
+            "description": "A software signal generator that produces two known tones for dashboard testing.",
+            "signal_path": [
+                "Synthetic source",
+                "Samples",
+                "FFT",
+                "Spectrum frame",
+                "Browser dashboard",
+            ],
+        }
 
     def snapshot(self) -> SpectrumFrame:
         frame_time = time.time()
