@@ -12,22 +12,34 @@ Can a browser read synthetic spectrum data from a local instrument server and up
 
 ```mermaid
 flowchart LR
-    A["SyntheticSpectrumSource"] --> B["/api/spectrum"]
-    C["Pi or Mac status"] --> D["/api/status"]
-    B --> E["Browser UI"]
-    D --> E
-    E --> F["Canvas spectrum and waveform"]
+    A["SpectrumSource interface"] --> B["SyntheticSpectrumSource"]
+    B --> C["/api/spectrum"]
+    D["Pi or Mac status"] --> E["/api/status"]
+    C --> F["Browser UI"]
+    E --> F
+    F --> G["Canvas spectrum and waveform"]
 ```
 
-The important design idea is that the UI reads a data shape, not a hardware-specific driver.
+The important design idea is that the UI reads a data shape, not a hardware-specific driver. A source only has to produce one current spectrum frame.
 
 Later:
 
 ```text
-SyntheticSpectrumSource -> RtlSdrSpectrumSource
+SyntheticSpectrumSource
+RecordedIqSpectrumSource
+RtlSdrSpectrumSource
 ```
 
 The web UI should not need to know which source created the spectrum frame.
+
+## Source Modules
+
+```text
+apps/observatory_web/sources/
+  base.py       # SpectrumSource contract
+  dsp.py        # dependency-free FFT helper
+  synthetic.py  # current synthetic two-tone source
+```
 
 ## Run On The Mac
 
@@ -89,7 +101,7 @@ GET /api/spectrum
 
 ## Next Steps
 
-1. Add a `sources/` module so synthetic, file, and RTL-SDR sources share one interface.
-2. Add a short learning log for the first web dashboard run.
+1. Add a recorded IQ file source using the same `SpectrumSource` contract.
+2. Add source selection to the server config.
 3. Replace polling with WebSockets once the data shape feels stable.
 4. Add a waterfall view.
